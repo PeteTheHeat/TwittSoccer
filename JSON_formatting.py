@@ -14,35 +14,38 @@ class Tweet:
   	self.followers_count = followers_count
   	self.verified = verified
 
-FCBlive_tweets, VillarrealFCB_tweets= [],[]
 
-for i in range(181):
-	file_name = '#FCBLive/FCBLive' + str(i) + '.json'
-	tweet_file = open(file_name, 'r')
-	tweets = json.loads(tweet_file.read())
 
-	for j in range(len(tweets['statuses'])):
-		FCBlive_tweets.append(Tweet(
-			tweets['statuses'][j]['text'], 
-			tweets['statuses'][j]['created_at'], 
-			tweets['statuses'][j]['retweet_count'], 
-			tweets['statuses'][j]['user']['screen_name'], 
-			tweets['statuses'][j]['user']['followers_count'], 
-			tweets['statuses'][j]['user']['verified']))
+def get_tweets():
+	FCBlive_tweets, VillarrealFCB_tweets= [],[]
+	for i in range(181):
+		file_name = '#FCBLive/FCBLive' + str(i) + '.json'
+		tweet_file = open(file_name, 'r')
+		tweets = json.loads(tweet_file.read())
 
-for i in range(299):
-	file_name = '#VillarrealFCB/VillarrealFCB' + str(i) + '.json'
-	tweet_file = open(file_name, 'r')
-	tweets = json.loads(tweet_file.read())
+		for j in range(len(tweets['statuses'])):
+			FCBlive_tweets.append(Tweet(
+				tweets['statuses'][j]['text'], 
+				tweets['statuses'][j]['created_at'], 
+				tweets['statuses'][j]['retweet_count'], 
+				tweets['statuses'][j]['user']['screen_name'], 
+				tweets['statuses'][j]['user']['followers_count'], 
+				tweets['statuses'][j]['user']['verified']))
 
-	for j in range(len(tweets['statuses'])):
-		VillarrealFCB_tweets.append(Tweet(
-			tweets['statuses'][j]['text'], 
-			tweets['statuses'][j]['created_at'], 
-			tweets['statuses'][j]['retweet_count'], 
-			tweets['statuses'][j]['user']['screen_name'], 
-			tweets['statuses'][j]['user']['followers_count'], 
-			tweets['statuses'][j]['user']['verified']))
+	for i in range(299):
+		file_name = '#VillarrealFCB/VillarrealFCB' + str(i) + '.json'
+		tweet_file = open(file_name, 'r')
+		tweets = json.loads(tweet_file.read())
 
-print(len(FCBlive_tweets))
-print(len(VillarrealFCB_tweets))
+		for j in range(len(tweets['statuses'])):
+			VillarrealFCB_tweets.append(Tweet(
+				tweets['statuses'][j]['text'], 
+				tweets['statuses'][j]['created_at'], 
+				tweets['statuses'][j]['retweet_count'], 
+				tweets['statuses'][j]['user']['screen_name'], 
+				tweets['statuses'][j]['user']['followers_count'], 
+				tweets['statuses'][j]['user']['verified']))
+
+	# print(len(FCBlive_tweets))
+	# print(len(VillarrealFCB_tweets))
+	return FCBlive_tweets, VillarrealFCB_tweets

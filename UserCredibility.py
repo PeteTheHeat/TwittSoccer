@@ -19,22 +19,20 @@ def get_user_credibility():
 				i[1][tweet.screen_name] = 1
 				unique_users.append(tweet)
 
-		#Sort by follower count descending
-		s = sorted(unique_users, key = lambda x: (x.followers_count, x.verified), reverse=True)
-		total_users = len(unique_users)
+		#Get max follower count in sample set
+		max_followers = max(unique_users, key = lambda x: x.followers_count).followers_count
 
-		for j in range(total_users):
-			#Credibility score = 1.0 if verified, else based on ranking of twitter followers within sample set
-			credibility = 1.0 if s[j].verified else (float(total_users - j) / total_users)
-			i[1][s[j].screen_name] = {
-				"followers_count": s[j].followers_count,
-				"verified": s[j].verified,
+		for j in range(len(unique_users)):
+			#Credibility score = 1.0 if verified, else based on ratio of followers_count:max_followers
+			credibility = 1.0 if unique_users[j].verified else (float(unique_users[j].followers_count) / max_followers)
+			i[1][unique_users[j].screen_name] = {
+				"followers_count": unique_users[j].followers_count,
+				"verified": unique_users[j].verified,
 				"credibility": credibility
 			}
 	# print len(VillarrealFCB_users.keys())
 	# print len(FCBlive_users.keys())
 	return FCBlive_users, VillarrealFCB_users
-
 
 
 	

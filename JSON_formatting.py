@@ -32,7 +32,7 @@ def get_tweets():
 				tweets['statuses'][j]['user']['followers_count'], 
 				tweets['statuses'][j]['user']['verified']))
 
-	for i in range(299):
+	for i in range(1736):
 		file_name = '#VillarrealFCB/VillarrealFCB' + str(i) + '.json'
 		tweet_file = open(file_name, 'r')
 		tweets = json.loads(tweet_file.read())

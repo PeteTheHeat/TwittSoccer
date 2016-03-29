@@ -3,17 +3,21 @@
 #in individual lists
 
 import json
+import time
+import calendar
 from pprint import pprint
+
+time_format = "%a %b %d  %H:%M:%S +0000 %Y"
 
 class Tweet:
   def __init__(self, text, created_at, retweet_count, screen_name, followers_count, verified):
   	self.text = text
   	self.created_at = created_at
+  	self.created_at_unix = calendar.timegm(time.strptime(created_at, time_format))
   	self.retweet_count = retweet_count
   	self.screen_name = screen_name
   	self.followers_count = followers_count
   	self.verified = verified
-
 
 
 def get_tweets():

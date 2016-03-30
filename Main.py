@@ -20,17 +20,11 @@ end_regex = re.compile('end|close|full|final|over', re.IGNORECASE)
 # Pull in our list of tweets
 tweets = get_tweets()
 
-# Parse tweets into goals, yellows, halftime, fulltime
-goal_tweets = []
-yellow_tweets = []
+# Parse tweets into halftime, fulltime
 half_tweets = []
 end_tweets = []
 
 for tweet in tweets:
-    if goal_regex.search(tweet.text):
-        goal_tweets.append(tweet)
-    if yellow_regex.search(tweet.text):
-        yellow_tweets.append(tweet)
     if half_regex.search(tweet.text):
         half_tweets.append(tweet)
     if end_regex.search(tweet.text):
@@ -62,13 +56,13 @@ for tweet in tweets:
         goals_half_stoppage[tweet_minute-45].append(tweet)
     elif tweet_minute - 45 < half_stoppage and yellow_regex.search(tweet.text):
         yellows_half_stoppage[tweet_minute-45].append(tweet)
-    elif tweet_minute - second_start < 45 and goal_regex.search(tweet.text):
+    elif tweet_minute >= second_start and tweet_minute - second_start < 45 and goal_regex.search(tweet.text):
         goals_regulartime[tweet_minute - second_start + 45].append(tweet)
-    elif tweet_minute - second_start < 45 and yellow_regex.search(tweet.text):
+    elif tweet_minute >= second_start and tweet_minute - second_start < 45 and yellow_regex.search(tweet.text):
         yellows_regulartime[tweet_minute - second_start + 45].append(tweet)
-    elif tweet_minute - (second_start + 45) < end_stoppage and goal_regex.search(tweet.text):
+    elif tweet_minute > second_start and tweet_minute - (second_start + 45) < end_stoppage and goal_regex.search(tweet.text):
         goals_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
-    elif tweet_minute - (second_start + 45) < end_stoppage and yellow_regex.search(tweet.text):
+    elif tweet_minute > second_start and tweet_minute - (second_start + 45) < end_stoppage and yellow_regex.search(tweet.text):
         yellows_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
 
 # Step 3: Compute fuzzy event and credibility for each minute of the game

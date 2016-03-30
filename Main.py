@@ -70,3 +70,7 @@ for tweet in tweets:
 # Step 3: Compute fuzzy event and credibility for each minute of the game
 goal_game_fuzz, goal_half_fuzz, goal_end_fuzz = get_event_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, goal_center, goal_scaling)
 yellow_game_fuzz, yellow_half_fuzz, yellow_end_fuzz = get_event_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, yellow_center, yellow_scaling)
+
+# Step 5: Compute the certainty value at each minute
+
+

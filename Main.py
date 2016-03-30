@@ -1,6 +1,8 @@
 import re
 from JSON_formatting import get_tweets
 from EventTime import get_event_times, get_tweet_minute, get_event_fuzziness
+from UserCredibility import get_minute_credibility, get_users_credibility, get_cred_fuzziness
+from FuzzyMembership import compute_certainty
 
 """
 Main function to control execution of the twitter analyzer
@@ -70,7 +72,31 @@ for tweet in tweets:
 # Step 3: Compute fuzzy event and credibility for each minute of the game
 goal_game_fuzz, goal_half_fuzz, goal_end_fuzz = get_event_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, goal_center, goal_scaling)
 yellow_game_fuzz, yellow_half_fuzz, yellow_end_fuzz = get_event_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, yellow_center, yellow_scaling)
+users_credibility = get_users_credibility(tweets)
+cred_goal_game_fuzz, cred_goal_half_fuzz, cred_goal_end_fuzz = get_cred_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, users_credibility)
+cred_yellow_game_fuzz, cred_yellow_half_fuzz, cred_yellow_end_fuzz = get_cred_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, users_credibility)
 
 # Step 5: Compute the certainty value at each minute
+goal_certainty = [compute_certainty(goal_game_fuzz[i], cred_goal_game_fuzz[i]) for i in range(0, 90)]
+goal_half_certainty = [compute_certainty(goal_half_fuzz[i], cred_goal_half_fuzz[i]) for i in range(0, half_stoppage)]
+goal_end_certainty = [compute_certainty(goal_end_fuzz[i], cred_goal_end_fuzz[i]) for i in range(0, end_stoppage)]
 
+yellow_certainty = [compute_certainty(yellow_game_fuzz[i], cred_yellow_game_fuzz[i]) for i in range(0, 90)]
+yellow_half_certainty = [compute_certainty(yellow_half_fuzz[i], cred_yellow_half_fuzz[i]) for i in range(0, half_stoppage)]
+yellow_end_certainty = [compute_certainty(yellow_end_fuzz[i], cred_yellow_end_fuzz[i]) for i in range(0, end_stoppage)]
+
+with open('goal_certainty.csv', 'w') as goalfile:
+    with open('yellow_certainty.csv', 'w') as yellowfile:
+        for i in range(0, 45):
+            goalfile.write(str(i) + ',' + str(goal_certainty[i]) + '\n')
+            yellowfile.write(str(i) + ',' + str(yellow_certainty[i]) + '\n')
+        for i in range(0, half_stoppage):
+            goalfile.write('+' + str(i) + ',' + str(goal_half_certainty[i]) + '\n')
+            yellowfile.write('+' + str(i) + ',' + str(yellow_half_certainty[i]) + '\n')
+        for i in range(45, 90):
+            goalfile.write(str(i) + ',' + str(goal_certainty[i]) + '\n')
+            yellowfile.write(str(i) + ',' + str(yellow_certainty[i]) + '\n')
+        for i in range(0, end_stoppage):
+            goalfile.write('+' + str(i) + ',' + str(goal_end_certainty[i]) + '\n')
+            yellowfile.write('+' + str(i) + ',' + str(yellow_end_certainty[i]) + '\n')
 

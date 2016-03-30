@@ -24,9 +24,8 @@ for i in range (0,len(t2)):
 #filter out goals and yellow tweets
 for i in range (0, len(game_tweets)):
     goal_regex = re.compile('go+a*l', re.IGNORECASE)
-    own_regex = re.compile('own goal', re.IGNORECASE)
     yellow_regex = re.compile('yellow', re.IGNORECASE)
-    if goal_regex.search(t2[i].text) and not own_regex.search(t2[i].text):
+    if goal_regex.search(t2[i].text):
         goal_tweets.append(t2[i])
     if yellow_regex.search(t2[i].text):
         yellow_tweets.append(t2[i])

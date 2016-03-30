@@ -5,9 +5,8 @@ from EventTime import get_event_times
 #based on number of followers and verification. FCBlive_users and VillarrealFCB_users are dicts with {key:value}
 #being {screen_name:{followers_count,verified,credibility}}
 
-# FCBlive_tweets, VillarrealFCB_tweets = get_tweets()
-
-def get_user_credibility(tweets):
+def get_user_credibility():
+	tweets = get_tweets()
 	users = {}
 	unique_users = []
 
@@ -32,14 +31,12 @@ def get_user_credibility(tweets):
 	return users
 
 def get_minute_credibility(tweets):
-	VillarrealFCB_tweets = get_tweets
-	user_credibilities = get_user_credibility(VillarrealFCB_tweets)
+	user_credibilities = get_user_credibility()
 	creds = []
 	for tweet in tweets:
 		creds.append(user_credibilities[tweet.screen_name]['credibility'])
 	return float(sum(creds))/len(creds)
 
-print get_minute_credibility(VillarrealFCB_tweets)
 
 
 

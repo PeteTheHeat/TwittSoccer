@@ -1,3 +1,4 @@
+import numpy as np
 from JSON_formatting import get_tweets
 from EventTime import get_event_times
 
@@ -34,7 +35,26 @@ def get_minute_credibility(users_credibility, minute_tweets):
 	creds = []
 	for tweet in minute_tweets:
 		creds.append(users_credibility[tweet.screen_name]['credibility'])
-	return float(sum(creds))/len(creds)
+	avg_cred = float(sum(creds))/len(creds)
+	return compute_fuzzy_score(avg_cred)
+
+def compute_fuzzy_score(avg_cred):
+    return 1.0/(1.0 + np.exp(-10 * (avg_cred - 0.5)))
+
+def get_cred_fuzziness(game, half_stoppage, end_stoppage, users_credibility):
+	all = [game, half_stoppage, end_stoppage]
+	cred_fuzz_all = []
+	for period in all:
+		cred_fuzz = []
+		for minute_tweets in period:
+			if minute_tweets:
+				avg_fuzz = get_minute_credibility(users_credibility, minute_tweets)
+				cred_fuzz.append(avg_fuzz)
+			else:
+				cred_fuzz.append(0.0)
+		cred_fuzz_all.append(cred_fuzz)
+	return cred_fuzz_all[0], cred_fuzz_all[1], cred_fuzz_all[2]
+
 
 
 

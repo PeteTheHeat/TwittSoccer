@@ -1,6 +1,7 @@
 import re
 from JSON_formatting import get_tweets
 from EventTime import get_event_times, get_tweet_minute, get_event_fuzziness
+from UserCredibility import get_minute_credibility, get_users_credibility, get_cred_fuzziness
 
 """
 Main function to control execution of the twitter analyzer
@@ -70,3 +71,10 @@ for tweet in tweets:
 # Step 3: Compute fuzzy event and credibility for each minute of the game
 goal_game_fuzz, goal_half_fuzz, goal_end_fuzz = get_event_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, goal_center, goal_scaling)
 yellow_game_fuzz, yellow_half_fuzz, yellow_end_fuzz = get_event_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, yellow_center, yellow_scaling)
+
+users_credibility = get_users_credibility(tweets)
+cred_goal_game_fuzz, cred_goal_half_fuzz, cred_goal_end_fuzz = get_cred_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, users_credibility)
+cred_yellow_game_fuzz, cred_yellow_half_fuzz, cred_yellow_end_fuzz = get_cred_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, users_credibility)
+
+
+

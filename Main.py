@@ -44,19 +44,31 @@ second_start = half_time + 15
 end_stoppage = end_time - (second_start + 45)
 
 # Step 2: Filter tweets into each minute of the game
-game_tweets = [[] for x in range(0, 90)] 
-half_stoppage_tweets = [[] for x in range(0, half_stoppage)]
-end_stoppage_tweets = [[] for x in range(0, end_stoppage)]
+goals_regulartime = [[] for x in range(0, 90)] 
+yellows_regulartime = [[] for x in range(0, 90)] 
+goals_half_stoppage = [[] for x in range(0, half_stoppage)]
+yellows_half_stoppage = [[] for x in range(0, half_stoppage)]
+goals_end_stoppage= [[] for x in range(0, end_stoppage)]
+yellows_end_stoppage= [[] for x in range(0, end_stoppage)]
+
 for tweet in tweets:
     tweet_minute = get_tweet_minute(tweet)
     # place tweet in appropriate list
-    if tweet_minute < 45:
-        game_tweets[tweet_minute].append(tweet)
-    elif tweet_minute - 45 < half_stoppage:
-        half_stoppage_tweets[tweet_minute-45].append(tweet)
-    elif tweet_minute - second_start < 45:
-        game_tweets[tweet_minute - second_start].append(tweet)
-    elif tweet_minute - (second_start + 45) < end_stoppage:
-        end_stoppage_tweets[tweet_minute - (second_start + 45)].append(tweet)
+    if tweet_minute < 45 and goal_regex.search(tweet.text):
+        goals_regulartime[tweet_minute].append(tweet)
+    elif tweet_minute < 45 and yellow_regex.search(tweet.text):
+        yellows_regulartime[tweet_minute].append(tweet)
+    elif tweet_minute - 45 < half_stoppage and goal_regex.search(tweet.text):
+        goals_half_stoppage[tweet_minute-45].append(tweet)
+    elif tweet_minute - 45 < half_stoppage and yellow_regex.search(tweet.text):
+        yellows_half_stoppage[tweet_minute-45].append(tweet)
+    elif tweet_minute - second_start < 45 and goal_regex.search(tweet.text):
+        goals_regulartime[tweet_minute - second_start].append(tweet)
+    elif tweet_minute - second_start < 45 and yellow_regex.search(tweet.text):
+        yellows_regulartime[tweet_minute - second_start].append(tweet)
+    elif tweet_minute - (second_start + 45) < end_stoppage and goal_regex.search(tweet.text):
+        goals_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
+    elif tweet_minute - (second_start + 45) < end_stoppage and yellow_regex.search(tweet.text):
+        yellows_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
 
 # Step 3: Compute fuzzy event and credibility for each minute of the game

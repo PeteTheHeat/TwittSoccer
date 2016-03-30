@@ -1,15 +1,17 @@
 import re
 from JSON_formatting import get_tweets
-from EventTime import get_event_times, get_tweet_minute
+from EventTime import get_event_times, get_tweet_minute, get_event_fuzziness
 
 """
 Main function to control execution of the twitter analyzer
 """
 
-# Thresholds for each event
-goal_threshold = 20
-yellow_threshold = 6
+# Variables for event detection
 time_threshold = 50
+goal_center = 20
+goal_scaling = 0.25
+yellow_center = 10
+yellow_scaling = 0.25
 
 # Regex 
 goal_regex = re.compile('g+o+a*l+', re.IGNORECASE)
@@ -66,3 +68,5 @@ for tweet in tweets:
         yellows_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
 
 # Step 3: Compute fuzzy event and credibility for each minute of the game
+goal_game_fuzz, goal_half_fuzz, goal_end_fuzz = get_event_fuzziness(goals_regulartime, goals_half_stoppage, goals_end_stoppage, goal_center, goal_scaling)
+yellow_game_fuzz, yellow_half_fuzz, yellow_end_fuzz = get_event_fuzziness(yellows_regulartime, yellows_half_stoppage, yellows_end_stoppage, yellow_center, yellow_scaling)

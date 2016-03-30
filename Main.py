@@ -63,9 +63,9 @@ for tweet in tweets:
     elif tweet_minute - 45 < half_stoppage and yellow_regex.search(tweet.text):
         yellows_half_stoppage[tweet_minute-45].append(tweet)
     elif tweet_minute - second_start < 45 and goal_regex.search(tweet.text):
-        goals_regulartime[tweet_minute - second_start].append(tweet)
+        goals_regulartime[tweet_minute - second_start + 45].append(tweet)
     elif tweet_minute - second_start < 45 and yellow_regex.search(tweet.text):
-        yellows_regulartime[tweet_minute - second_start].append(tweet)
+        yellows_regulartime[tweet_minute - second_start + 45].append(tweet)
     elif tweet_minute - (second_start + 45) < end_stoppage and goal_regex.search(tweet.text):
         goals_end_stoppage[tweet_minute - (second_start + 45)].append(tweet)
     elif tweet_minute - (second_start + 45) < end_stoppage and yellow_regex.search(tweet.text):

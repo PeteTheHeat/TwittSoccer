@@ -21,7 +21,7 @@ class Tweet:
 
 
 def get_tweets():
-	VillarrealFCB_tweets= []
+	VillarrealFCB_tweets, CFCLive_tweets = [],[]
 	for i in range(1736):
 		file_name = '#VillarrealFCB/VillarrealFCB' + str(i) + '.json'
 		tweet_file = open(file_name, 'r')
@@ -36,5 +36,18 @@ def get_tweets():
 				tweets['statuses'][j]['user']['followers_count'], 
 				tweets['statuses'][j]['user']['verified']))
 
-	# print(len(VillarrealFCB_tweets))
-	return VillarrealFCB_tweets
+	for i in range(2593):
+		file_name = '#CFCLive/CFCLive' + str(i) + '.json'
+		tweet_file = open(file_name, 'r')
+		tweets = json.loads(tweet_file.read())
+
+		for j in range(len(tweets['statuses'])):
+			CFCLive_tweets.append(Tweet(
+				tweets['statuses'][j]['text'], 
+				tweets['statuses'][j]['created_at'], 
+				tweets['statuses'][j]['retweet_count'], 
+				tweets['statuses'][j]['user']['screen_name'], 
+				tweets['statuses'][j]['user']['followers_count'], 
+				tweets['statuses'][j]['user']['verified']))
+
+	return VillarrealFCB_tweets, CFCLive_tweets

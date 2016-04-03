@@ -41,13 +41,13 @@ half_regex = re.compile('half', re.IGNORECASE)
 end_regex = re.compile('end|close|full|final|over', re.IGNORECASE)
 
 # Pull in our list of tweets
-tweets = get_tweets()
+FCBtweets, CFCtweets = get_tweets()
 
 # Parse tweets into halftime, fulltime
 half_tweets = []
 end_tweets = []
 
-for tweet in tweets:
+for tweet in FCBtweets:
     if half_regex.search(tweet.text):
         half_tweets.append(tweet)
     if end_regex.search(tweet.text):

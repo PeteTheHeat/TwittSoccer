@@ -1,50 +1,26 @@
+# -*- coding: utf-8 -*-
+
 import re
+import numpy
 from JSON_formatting import get_tweets
 
-[t1, t2] = get_tweets()
+FCBtweets, CFCtweets = get_tweets()
 
-game_tweets, yellow_tweets, goal_tweets = [], [], []
-players = ["neymar", "bakambu", "rakitic", "mathieu", "arda", "messi", "suarez", "mascherano", "pique", "alves", "alba", "busquets", "soldado", "soriano", "trigueros", "castillejo", "bailly", "ruiz", "asenjo", "mario", "rukavina", "bruno", "adrian", "pina", "baptistao", "bravo", "roberto"]
-goal_counters, yellow_counters = [], []
+barca_players = ["neymar", "rakitic", "mathieu", "arda|turan", "messi", "suarez", "mascherano", "piqué|pique", "alves", "alba", "busquets", "bravo", "roberto"]
+villareal_players = ["bakambu", "soldado", "soriano", "trigueros", "castillejo", "bailly", "ruiz", "asenjo", "mario", "rukavina", "bruno", "adrian", "pina", "baptistao"]
+chelsea_players = ["remy", "kenedy", "pedro", "loftus|cheek", "mikel", "cesc|fabregas|fàbregas", "azpilicueta", "ivanovic", "miazga", "baba|rahman", "courtois", "alexandre|pato", "oscar", "clarke|salter"]
+aston_villa_players = ["guzan", "hutton", "richards", "lescott", "cissokho", "sanchez|sànchez", "westwood", "gueye", "carles|gil", "gestede", "jordan|ayew"]
+all_players = barca_players + villareal_players + chelsea_players + aston_villa_players
 regexs = []
-time_format = "%a %b %d  %H:%M:%S +0000 %Y"
 
 #setup
-for i in range(0, len(players)):
-    goal_counters.append(0)
-    yellow_counters.append(0)
-    regexs.append(re.compile(players[i], re.IGNORECASE))
+for i in range(0, len(all_players)):
+    regexs.append(re.compile(all_players[i], re.IGNORECASE))
 
-#filter out tweets from game that aren't retweets
-for i in range (0,len(t2)):
-    if t2[i].created_at_unix < 1458493324:
-        if not "RT" in t2[i].text:
-            game_tweets.append(t2[i])
-
-#filter out goals and yellow tweets
-for i in range (0, len(game_tweets)):
-    goal_regex = re.compile('go+a*l', re.IGNORECASE)
-    yellow_regex = re.compile('yellow', re.IGNORECASE)
-    if goal_regex.search(t2[i].text):
-        goal_tweets.append(t2[i])
-    if yellow_regex.search(t2[i].text):
-        yellow_tweets.append(t2[i])
-
-goal_tweets.sort(key=lambda x:x.created_at_unix)
-yellow_tweets.sort(key=lambda x:x.created_at_unix)
-
-#count player names from goal tweets
-for i in range(0,len(goal_tweets)):
-    for j in range(0,len(players)):
-        if regexs[j].search(goal_tweets[i].text):
-            goal_counters[j]+=1
-
-#count player names from yellow tweets
-for i in range(0,len(yellow_tweets)):
-    for j in range(0,len(players)):
-        if regexs[j].search(yellow_tweets[i].text):
-            yellow_counters[j]+=1
-
-#print number of player mentions in tweets 
-for i in range(0,len(players)):
-    print(players[i] + " " + str(goal_counters[i]) + " goals and " + str(yellow_counters[i]) + " yellows")
+#Pass in a list of tweets, outputs which player occurs the most
+def get_most_likely_player(tweets):
+	player_counter = [0] * len(all_players)
+	for i in range(0, len(tweets)):
+		for j in range(0, len(all_players)):
+			player_counter[j]+=1 if regexs[j].search(tweets[i].text) else 0
+  	return all_players[numpy.argmax(player_counter)]

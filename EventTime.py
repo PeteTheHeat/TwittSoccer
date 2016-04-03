@@ -5,7 +5,6 @@ Estimate the time of an event of get the fuzzy score of an event
 """
 
 bucket_size = 60 # 1 minute buckets
-first_tweet = 1458485967 # actually find the start of tweets TODO
 
 def derivatives(counts):
     deriv_list = [0]
@@ -13,13 +12,13 @@ def derivatives(counts):
         deriv_list.append(counts[i] - counts[i-1])
     return deriv_list
 
-def get_tweet_minute(tweet):
-    return int(tweet.created_at_unix - first_tweet) / bucket_size
+def get_tweet_minute(tweet, start_time):
+    return int(tweet.created_at_unix - start_time) / bucket_size
 
-def get_event_times(tweets, threshold):
+def get_event_times(tweets, threshold, start_time):
     buckets = {}
     for tweet in tweets:
-        bucket = get_tweet_minute(tweet)
+        bucket = get_tweet_minute(tweet, start_time)
         if bucket not in buckets:
             buckets[bucket] = 0
         buckets[bucket] += 1

@@ -22,13 +22,13 @@ half_regex = re.compile('half', re.IGNORECASE)
 end_regex = re.compile('end|close|full|final|over', re.IGNORECASE)
 
 # Pull in our list of tweets
-tweets = get_tweets()
+FCBtweets, CFCtweets = get_tweets()
 
 # Parse tweets into halftime, fulltime
 half_tweets = []
 end_tweets = []
 
-for tweet in tweets:
+for tweet in FCBtweets:
     if half_regex.search(tweet.text):
         half_tweets.append(tweet)
     if end_regex.search(tweet.text):
@@ -49,7 +49,7 @@ yellows_half_stoppage = [[] for x in range(0, half_stoppage)]
 goals_end_stoppage= [[] for x in range(0, end_stoppage)]
 yellows_end_stoppage= [[] for x in range(0, end_stoppage)]
 
-for tweet in tweets:
+for tweet in FCBtweets:
     tweet_minute = get_tweet_minute(tweet)
     # place tweet in appropriate list
     if tweet_minute < 45 and goal_regex.search(tweet.text):

@@ -6,6 +6,23 @@ Estimate the time of an event of get the fuzzy score of an event
 
 bucket_size = 60 # 1 minute buckets
 
+def generate_tweet_volume_graph(tweets, start_time):
+    times = [tweet.created_at_unix for tweet in tweets]
+    times.sort()
+    buckets = {}
+    for t in times:
+        bucket = int(t - start_time)/bucket_size
+        if bucket >= 0:
+            if bucket not in buckets:
+                buckets[bucket] = 0
+            buckets[bucket] += 1
+    with open('times.csv', 'w') as outfile:
+        for i in range(0, (int(times[-1] - start_time)/bucket_size) + 1):
+            if i in buckets:
+                outfile.write("{},{}\n".format(i, buckets[i]))
+            else:
+                outfile.write(str(i) + ",0\n")
+
 def derivatives(counts):
     deriv_list = [0]
     for i in range(1, len(counts)):
@@ -19,9 +36,10 @@ def get_event_times(tweets, threshold, start_time):
     buckets = {}
     for tweet in tweets:
         bucket = get_tweet_minute(tweet, start_time)
-        if bucket not in buckets:
-            buckets[bucket] = 0
-        buckets[bucket] += 1
+        if bucket >= 0:
+            if bucket not in buckets:
+                buckets[bucket] = 0
+            buckets[bucket] += 1
 
     # cut off tweets after the game
     counts = []

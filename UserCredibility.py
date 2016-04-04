@@ -7,7 +7,6 @@ from EventTime import get_event_times
 #being {screen_name:{followers_count,verified,credibility}}
 
 def get_users_credibility(tweets):
-	tweets = get_tweets()
 	users = {}
 	unique_users = []
 
